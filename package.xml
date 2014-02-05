@@ -2,7 +2,7 @@
  <name> cart_traj_generators </name>
   <version>0.1.0</version>
   <description>
-    
+    Cartesian trajectory generator C++ classes.
   </description>
   <license>BSD</license>
 
