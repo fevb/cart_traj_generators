@@ -33,7 +33,9 @@
    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <ros/ros.h>
+#ifndef CART_TRAJ_GENERATOR_H_
+#define CART_TRAJ_GENERATOR_H_
+
 #include <kdl/frames.hpp>
 
 
@@ -43,17 +45,27 @@ class CartTrajGenerator
 
 public:
 
-	CartTrajGenerator();
-	~CartTrajGenerator();
+	// f_init: initial pose
+	// duration [sec]
+	CartTrajGenerator(const KDL::Frame &F_init);
 
-	bool getParameters();
+	virtual ~CartTrajGenerator();
 
-	bool resetTrajectory();
-	bool updateTrajectory();
+	void setInitPose(const KDL::Frame &F_init);
+	void setDuration(double duration);
 
-private:
+	// gets the position and velocity set points at a given time [sec]
+	virtual void getSetPoint(double time, KDL::Frame &f, KDL::Twist &v);
 
-	ros::Time m_t_start;
+protected:
+
+	// initial starting pose
+	KDL::Frame m_F_init;
+
+	// duration of the trajectory
+	double m_duration;
 
 
 };
+
+#endif

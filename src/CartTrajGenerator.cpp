@@ -34,3 +34,30 @@
 */
 
 #include<cart_traj_generators/CartTrajGenerator.h>
+
+
+CartTrajGenerator::CartTrajGenerator(const KDL::Frame &F_init)
+{
+	m_F_init = F_init;
+}
+
+CartTrajGenerator::~CartTrajGenerator()
+{
+
+}
+
+void CartTrajGenerator::setInitPose(const KDL::Frame &F_init)
+{
+	m_F_init = F_init;
+}
+
+void CartTrajGenerator::setDuration(double duration)
+{
+	m_duration = duration;
+}
+
+void CartTrajGenerator::getSetPoint(double time, KDL::Frame &f, KDL::Twist &v)
+{
+
+}
+
