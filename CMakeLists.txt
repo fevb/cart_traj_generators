@@ -20,8 +20,8 @@ link_directories(${catkin_LIBRARY_DIRS})
 add_library(cart_traj_generator src/CartTrajGenerator.cpp)
 target_link_libraries(cart_traj_generator ${catkin_LIBRARIES})
 
-add_library(circle_traj_generator src/CircleTrajGenerator.cpp src/CartTrajGenerator.cpp)
-target_link_libraries(circle_traj_generator ${catkin_LIBRARIES})
+add_library(circle_traj_generator src/CircleTrajGenerator.cpp)
+target_link_libraries(circle_traj_generator ${catkin_LIBRARIES} cart_traj_generator)
 
 install(TARGETS cart_traj_generator circle_traj_generator
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}

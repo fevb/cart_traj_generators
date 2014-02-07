@@ -36,9 +36,9 @@
 #include<cart_traj_generators/CartTrajGenerator.h>
 
 
-CartTrajGenerator::CartTrajGenerator(const KDL::Frame &F_init)
+CartTrajGenerator::CartTrajGenerator()
 {
-	m_F_init = F_init;
+
 }
 
 CartTrajGenerator::~CartTrajGenerator()

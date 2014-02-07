@@ -45,9 +45,7 @@ class CartTrajGenerator
 
 public:
 
-	// f_init: initial pose
-	// duration [sec]
-	CartTrajGenerator(const KDL::Frame &F_init);
+	CartTrajGenerator();
 
 	virtual ~CartTrajGenerator();
 

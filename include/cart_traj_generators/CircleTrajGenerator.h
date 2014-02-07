@@ -45,7 +45,7 @@ class CircleTrajGenerator : public CartTrajGenerator
 
 public:
 
-	CircleTrajGenerator(const KDL::Frame &F_init);
+	CircleTrajGenerator();
 	~CircleTrajGenerator();
 
 	void setRadius(double radius);

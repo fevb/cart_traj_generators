@@ -36,7 +36,7 @@
 #include <cart_traj_generators/CircleTrajGenerator.h>
 
 
-CircleTrajGenerator::CircleTrajGenerator(const KDL::Frame &F_init) : CartTrajGenerator(F_init)
+CircleTrajGenerator::CircleTrajGenerator() : CartTrajGenerator()
 {
 
 }
