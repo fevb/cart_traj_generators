@@ -1,8 +1,8 @@
 /*
- *  CircleTrajGenerator.h
+ *  LineTrajGenerator.h
  *
  *
- *  Created on: Feb 5, 2014
+ *  Created on: Apr 30, 2014
  *  Authors:   Francisco Viña
  *            fevb <at> kth.se
  */
@@ -33,32 +33,39 @@
    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef CIRCLE_TRAJ_GENERATOR_H_
-#define CIRCLE_TRAJ_GENERATOR_H_
+#ifndef LINETRAJGENERATOR_H_
+#define LINETRAJGENERATOR_H_
 
 #include <cart_traj_generators/CartTrajGenerator.h>
 
-
-// class for generating trajectories in XY plane
-class CircleTrajGenerator : public CartTrajGenerator
+class LineTrajGenerator : public CartTrajGenerator
 {
-
 public:
+	LineTrajGenerator();
+	virtual ~LineTrajGenerator();
 
-	CircleTrajGenerator();
-	virtual ~CircleTrajGenerator();
+	// direction in which to move in a straight line
+	void setTangentialDirection(KDL::Vector tangential_direction);
 
-	void setRadius(double radius);
-	void setPeriod(double period);
+	// normal direction on which to apply sine wave
+	void setNormalDirection(KDL::Vector normal_direction);
+
+	// reference velocity of the line trajectory
+	void setVel(double vel);
+
+	// amplitude of the sine wave in the normal direction
+	void setSineAmplitude(double sine_amplitude);
 
 	void getSetPoint(double time, KDL::Frame &F, KDL::Twist &v);
 
 private:
 
-	double m_radius;
-	double m_period;
+	double m_vel;
+	KDL::Vector m_tangential_direction;
+	KDL::Vector m_normal_direction;
 
+	double m_sine_amplitude;
 
 };
 
-#endif
+#endif /* LINETRAJGENERATOR_H_ */
