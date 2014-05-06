@@ -1,8 +1,8 @@
 /*
- *  LineTrajGenerator.cpp
+ *  LinePeriodicTrajGenerator.h
  *
  *
- *  Created on: Apr 30, 2014
+ *  Created on: May 5, 2014
  *  Authors:   Francisco Viña
  *            fevb <at> kth.se
  */
@@ -33,43 +33,28 @@
    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <cart_traj_generators/LineTrajGenerator.h>
-#include <math.h>
+#include <cart_traj_generators/LinePeriodicTrajGenerator.h>
 
-LineTrajGenerator::LineTrajGenerator() : CartTrajGenerator()
+LinePeriodicTrajGenerator::LinePeriodicTrajGenerator() : LineTrajGenerator()
+{
+
+
+}
+
+LinePeriodicTrajGenerator::~LinePeriodicTrajGenerator()
 {
 
 }
 
-LineTrajGenerator::~LineTrajGenerator()
+void LinePeriodicTrajGenerator::setPeriod(double period)
 {
-
+	m_period = period;
 }
 
-void LineTrajGenerator::setTangentialDirection(KDL::Vector tangential_direction)
+void LinePeriodicTrajGenerator::getSetPoint(double time, KDL::Frame &F, KDL::Twist &v)
 {
-	m_tangential_direction = tangential_direction;
-	m_tangential_direction.Normalize();
-}
+	double t = fmod(time, m_period);
 
-void LineTrajGenerator::setNormalDirection(KDL::Vector normal_direction)
-{
-	m_normal_direction = normal_direction;
-	m_normal_direction.Normalize();
-}
-
-void LineTrajGenerator::setVel(double vel)
-{
-	m_vel = vel;
-}
-
-void LineTrajGenerator::setSineAmplitude(double sine_amplitude)
-{
-	m_sine_amplitude = fabs(sine_amplitude);
-}
-
-void LineTrajGenerator::getSetPoint(double time, KDL::Frame& F, KDL::Twist& v)
-{
 	F = m_F_init;
 	// set zero rotational velocity
 	v.rot = KDL::Vector::Zero();
@@ -77,43 +62,47 @@ void LineTrajGenerator::getSetPoint(double time, KDL::Frame& F, KDL::Twist& v)
 	KDL::Vector line_pos;
 
 	KDL::Vector sine_wave_pos;
-	v.vel = m_normal_direction*(2.0*M_PI*0.8)*m_sine_amplitude*sin(2.0*M_PI*0.8*time);
+	v.vel = m_normal_direction*(2.0*M_PI)*m_sine_amplitude*sin(2.0*M_PI*time);
 	// add a small offset to the sine wave
-	sine_wave_pos = -m_sine_amplitude*cos(2.0*M_PI*0.8*time)*m_normal_direction
-	- m_sine_amplitude*m_normal_direction - 0.001*m_normal_direction;
+	sine_wave_pos = -m_sine_amplitude*cos(2.0*M_PI*time)*m_normal_direction
+	- m_sine_amplitude*m_normal_direction - 0.01*m_normal_direction;
 
 	KDL::Vector max_vel = m_tangential_direction*m_vel;
 
-	if(time<1.0)
+	if(t>(m_period/2.0))
 	{
-		v.vel = v.vel + max_vel*time;
-		line_pos = max_vel*pow(time, 2.0)/2.0;
+		t = fmod(t,(m_period/2.0));
+		F.p = F.p + max_vel/2.0 + max_vel*(m_period/2.0-2.0) + max_vel/2.0;
+		max_vel = max_vel*-1;
+	}
+
+
+	if(t<1.0)
+	{
+		v.vel = v.vel + max_vel*t;
+		line_pos = max_vel*pow(t, 2.0)/2.0;
 		F.p = F.p + line_pos + sine_wave_pos;
 		return;
 	}
 
-	else if(time >= 1.0 && time <= m_duration-1.0)
+	else if(t >= 1.0 && t <= m_period/2.0-1.0)
 	{
 		v.vel = v.vel + max_vel;
-		line_pos = max_vel/2.0 + max_vel*(time-1.0);
+		line_pos = max_vel/2.0 + max_vel*(t-1.0);
 		F.p = F.p + line_pos + sine_wave_pos;
 		return;
 	}
 
-	else if(time>=m_duration-1.0 && time<=m_duration)
+	else if(t>=m_period/2.0-1.0 && t<=m_period/2.0)
 	{
-		v.vel = v.vel + max_vel*(m_duration-time);
-		line_pos = max_vel/2.0 + max_vel*(m_duration-2.0) + max_vel*pow(m_duration-time, 2.0)/2.0;
+		v.vel = v.vel + max_vel*(m_period/2.0-t);
+		line_pos = max_vel/2.0 + max_vel*(m_period/2.0-2.0) + max_vel*pow(m_period/2.0-t, 2.0)/2.0;
 		F.p = F.p + line_pos + sine_wave_pos;
 	}
 
-	else
+	if(time>=m_duration)
 	{
 		v.vel = KDL::Vector::Zero();
-		line_pos = max_vel + max_vel*(m_duration-2.0);
-		F.p = F.p + line_pos;
 	}
 
 }
-
-

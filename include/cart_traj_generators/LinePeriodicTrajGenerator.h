@@ -1,8 +1,8 @@
 /*
- *  LineTrajGenerator.h
+ *  LinePeriodicTrajGenerator.h
  *
  *
- *  Created on: Apr 30, 2014
+ *  Created on: May 5, 2014
  *  Authors:   Francisco Viña
  *            fevb <at> kth.se
  */
@@ -33,39 +33,23 @@
    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef LINETRAJGENERATOR_H_
-#define LINETRAJGENERATOR_H_
+#ifndef LINEPERIODICTRAJGENERATOR_H_
+#define LINEPERIODICTRAJGENERATOR_H_
 
-#include <cart_traj_generators/CartTrajGenerator.h>
+#include <cart_traj_generators/LineTrajGenerator.h>
 
-class LineTrajGenerator : public CartTrajGenerator
+class LinePeriodicTrajGenerator : public LineTrajGenerator
 {
 public:
-	LineTrajGenerator();
-	virtual ~LineTrajGenerator();
+	LinePeriodicTrajGenerator();
+	virtual ~LinePeriodicTrajGenerator();
 
-	// direction in which to move in a straight line
-	void setTangentialDirection(KDL::Vector tangential_direction);
+	void setPeriod(double period);
 
-	// normal direction on which to apply sine wave
-	void setNormalDirection(KDL::Vector normal_direction);
+	void getSetPoint(double time, KDL::Frame &F, KDL::Twist &v);
 
-	// reference velocity of the line trajectory
-	void setVel(double vel);
-
-	// amplitude of the sine wave in the normal direction
-	void setSineAmplitude(double sine_amplitude);
-
-	virtual void getSetPoint(double time, KDL::Frame &F, KDL::Twist &v);
-
-protected:
-
-	double m_vel;
-	KDL::Vector m_tangential_direction;
-	KDL::Vector m_normal_direction;
-
-	double m_sine_amplitude;
-
+private:
+	double m_period;
 };
 
-#endif /* LINETRAJGENERATOR_H_ */
+#endif /* LINEPERIODICTRAJGENERATOR_H_ */
