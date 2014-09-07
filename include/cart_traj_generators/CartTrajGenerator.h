@@ -55,6 +55,8 @@ public:
 	// gets the position and velocity set points at a given time [sec]
 	virtual void getSetPoint(double time, KDL::Frame &f, KDL::Twist &v);
 
+    double getDuration();
+
 protected:
 
 	// initial starting pose

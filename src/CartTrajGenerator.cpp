@@ -61,3 +61,7 @@ void CartTrajGenerator::getSetPoint(double time, KDL::Frame &f, KDL::Twist &v)
 
 }
 
+double CartTrajGenerator::getDuration()
+{
+    return m_duration;
+}
